@@ -1,7 +1,7 @@
 public class TemporizadorMascota implements Runnable {
     private Mascota mascota;
     private boolean ejecutando = true;
-    private final int INTERVALO = 50000; // 50 segundos
+    private final int INTERVALO = 50000; // 50 segundos = 50000 milisegundos
 
     public TemporizadorMascota(Mascota mascota) {
         this.mascota = mascota;
