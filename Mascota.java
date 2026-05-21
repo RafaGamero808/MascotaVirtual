@@ -1,49 +1,36 @@
+// Archivo: Mascota.java
 public class Mascota {
+    // Atributos base
     private int felicidad = 50;
     private int panza = 50;
     private int diversion = 50;
-    private int caca = 90;
+    private int caca = 90; // Nota: 100% es limpio, va bajando al comer (necesidad de ir al baño)
     private int exp = 0;
     private int nivel = 1;
-    private int cansancio = 100;
+    private int cansancio = 100; // 100% es energía a tope, baja al jugar
 
-    //Getters
+    // SISTEMA DE EVOLUCIÓN
+    private String etapaEvolutiva = "Bebé Ico"; // Etapas: Bebé Ico -> Neo Joven -> Alpha Adulto
+
+    // Getters
     public int getFelicidad() {
         calcularFelicidad();
         return felicidad;
     }
 
-    public int getPanza() {
-        return panza;
-    }
+    public int getPanza() { return panza; }
+    public int getDiversion() { return diversion; }
+    public int getCaca() { return caca; }
+    public int getExp() { return exp; }
+    public int getNivel() { return nivel; }
+    public int getCansancio() { return cansancio; }
+    public String getEtapaEvolutiva() { return etapaEvolutiva; }
 
-    public int getDiversion() {
-        return diversion;
-    }
-
-    public int getCaca() {
-        return caca;
-    }
-
-    public int getExp() {
-        return exp;
-    }
-
-    public int getNivel() {
-        return nivel;
-    }
-
-    public int getCansancio() {
-        return cansancio;
-    }
-
-    // MÉTODO PARA CALCULAR FELICIDAD AUTOMÁTICAMENTE
+    // METODO PARA CALCULAR FELICIDAD AUTOMÁTICAMENTE
     private void calcularFelicidad() {
-        // Sistema basado en el punto crítico de 75 que mencionaste
         int atributosBuenos = 0;
         int totalDesviacion = 0;
 
-        // Verificar cada atributo contra el punto crítico de 75
         if (panza >= 75) atributosBuenos++;
         else totalDesviacion += (75 - panza);
 
@@ -53,192 +40,112 @@ public class Mascota {
         if (caca >= 75) atributosBuenos++;
         else totalDesviacion += (75 - caca);
 
-        if (cansancio >= 75) atributosBuenos++; // Cansancio alto es bueno
+        if (cansancio >= 75) atributosBuenos++;
         else totalDesviacion += (75 - cansancio);
 
-        // Cálculo base: 25 puntos por cada atributo en buen estado
         double felicidadBase = atributosBuenos * 25;
-
-        // Penalización por desviación (cada punto de desviación reduce 0.4 de felicidad)
         double penalizacion = totalDesviacion * 0.4;
 
         felicidad = (int) Math.max(0, Math.min(100, felicidadBase - penalizacion));
     }
 
-    //METODOS PARA EL MANTENIMIENTO DE LA MASCOTA
-    //NIVEL
+    // CONTROL DE NIVEL Y EVOLUCIÓN INTERNA
     private void nivelChequeo(){
-        if (exp >= (int)((nivel + 0.5) * 100)){
+        int expNecesaria = (int)((nivel + 0.5) * 100);
+        if (exp >= expNecesaria){
             nivel++;
             exp = 0;
-            System.out.println("¡Subida de nivel! ¡Tu gato ahora es nivel " + nivel + "!");
+            System.out.println("¡Subida de nivel! Tu mascota ahora es nivel " + nivel + "!");
+            
+            // Lógica de Evolución Basada en Niveles
+            actualizarEvolucion();
         }
     }
 
-    //COMIDA
+    private void actualizarEvolucion() {
+        String etapaAnterior = etapaEvolutiva;
+        
+        if (nivel >= 10) {
+            etapaEvolutiva = "Alpha Adulto";
+        } else if (nivel >= 4) {
+            etapaEvolutiva = "Neo Joven";
+        } else {
+            etapaEvolutiva = "Bebé Ico";
+        }
+
+        if (!etapaEvolutiva.equals(etapaAnterior)) {
+            System.out.println("============== ¡INCREÍBLE! ==============");
+            System.out.println("¡Tu mascota ha evolucionado a: " + etapaEvolutiva + "!");
+            System.out.println("=========================================");
+        }
+    }
+
+    // METODOS DE MANTENIMIENTO
     public void comerPoco() {
-        int panzaAntes = panza;
-        panza = panza + 25;
-        if (panza > 100){
-            panza = 100;
-        }
-
-        if (panza < 100){
-            System.out.println("El nivel de comida de tu gato es " + panza + "% , aún podría comer algo más...");
-        }
-        else if (panza == 100){
-            System.out.println("¡Tu gato está completamente lleno!");
-        }
-        getPanza();
-
-        caca -= 25;
-        getCaca();
-
+        panza = Math.min(panza + 25, 100);
+        System.out.println("Le diste un snack. Panza al " + panza + "%.");
+        caca = Math.max(caca - 15, 0); // Ensuicia un poco el estómago
         exp += 5;
         nivelChequeo();
     }
 
     public void comerMucho() {
-        int panzaAntes = panza;
-        panza = panza + 50;
-        if (panza > 100){
-            panza = 100;
-        }
-
-        if (panza < 100){
-            System.out.println("El nivel de comida de tu gato es " + panza + "% , aún podría comer algo más...");
-        }
-        else if (panza == 100){
-            System.out.println("¡Tu gato está completamente lleno!");
-        }
-        getPanza();
-
-        caca -= 35;
-        getCaca();
-
-        exp += 5;
+        panza = Math.min(panza + 50, 100);
+        System.out.println("Le diste un buen plato de comida. Panza al " + panza + "%.");
+        caca = Math.max(caca - 30, 0); // Al comer mucho, le darán ganas de ir al baño más rápido
+        exp += 12;
         nivelChequeo();
     }
 
     public void comerLleno() {
-        int panzaAntes = panza;
-        panza = panza + 100;
-        if (panza > 100){
-            panza = 100;
-        }
-
-        if (panza == 100){
-            System.out.println("¡Tu gato está completamente lleno!");
-        }
-        getPanza();
-
-        caca -= 35;
-        getCaca();
-
-        exp += 45;
+        panza = 100;
+        System.out.println("¡Tu mascota está completamente llena!");
+        caca = Math.max(caca - 45, 0);
+        exp += 25;
         nivelChequeo();
     }
 
-    //DIVERSION
     public void jugarPoco() {
-        int diversionAntes = diversion;
-        diversion = diversion + 25;
-        if (diversion > 100){
-            diversion = 100;
-        }
-
-        if (diversion < 100){
-            System.out.println("Parece que a tu gato no le importaría jugar un rato más... (Diversión: " + diversion + "%)");
-        }
-        else if (diversion == 100){
-            System.out.println("¡Tu gato está completamente entretenido! (Diversión: 100%)");
-        }
-
-        cansancio -= 15;
-        if (cansancio < 0) {
-            cansancio = 0;
-        }
-        getCansancio();
-
-        exp += 5;
+        diversion = Math.min(diversion + 25, 100);
+        cansancio = Math.max(cansancio - 15, 0);
+        System.out.println("Jugaste un ratito. Diversión: " + diversion + "%. Enérgia: " + cansancio + "%.");
+        exp += 8;
         nivelChequeo();
     }
 
     public void jugarNormal() {
-        int diversionAntes = diversion;
-        diversion = diversion + 50;
-        if (diversion > 100){
-            diversion = 100;
-        }
-
-        if (diversion < 100){
-            System.out.println("Parece que a tu gato no le importaría jugar un rato más... (Diversión: " + diversion + "%)");
-        }
-        else if (diversion == 100){
-            System.out.println("¡Tu gato está completamente entretenido! (Diversión: 100%)");
-        }
-
-        cansancio -= 20;
-        if (cansancio < 0) {
-            cansancio = 0;
-        }
-        getCansancio();
-
-        exp += 10;
+        diversion = Math.min(diversion + 50, 100);
+        cansancio = Math.max(cansancio - 25, 0);
+        System.out.println("¡Buen rato de juego! Diversión: " + diversion + "%. Energía: " + cansancio + "%.");
+        exp += 18;
         nivelChequeo();
     }
 
     public void jugarMucho() {
-        int diversionAntes = diversion;
-        diversion = diversion + 75;
-        if (diversion > 100){
-            diversion = 100;
-        }
-
-        if (diversion < 100){
-            System.out.println("Parece que a tu gato no le importaría jugar un rato más... (Diversión: " + diversion + "%)");
-        }
-        else if (diversion == 100){
-            System.out.println("¡Tu gato está completamente entretenido! (Diversión: 100%)");
-        }
-
-        cansancio -= 25;
-        if (cansancio < 0) {
-            cansancio = 0;
-        }
-        getCansancio();
-
-        exp += 15;
+        diversion = 100;
+        cansancio = Math.max(cansancio - 40, 0);
+        System.out.println("¡Sesión intensa de juego! Diversión al máximo. Energía: " + cansancio + "%.");
+        exp += 30;
         nivelChequeo();
     }
 
-    //HACER CACA
     public void hacerCaca() {
-        caca = caca + 100;
-        if (caca > 100){
-            caca = 100;
-
-            System.out.println("¡Qué a gusto se ha quedado el gato!");
-        }
-        exp += 1;
+        caca = 100; // Limpio de nuevo
+        System.out.println("¡Tu mascota fue al baño y se ha quedado como nueva!");
+        exp += 5;
         nivelChequeo();
     }
 
-    //DESCANSAR
     public void descansar() {
-        cansancio = cansancio + 100;
-        if (cansancio > 100){
-            cansancio = 100;
-
-            System.out.println("Tu gato está listo para correr los sanfermines");
-        }
+        cansancio = 100;
+        System.out.println("La mascota durmió plácidamente. ¡Energía recuperada!");
+        exp += 5;
+        nivelChequeo();
     }
 
-    //REDUCCIÓN DE ATRIBUTOS
-    public void reducirAtributos(int reducirPanza, int reducirDiversion, int reducirCaca, int reducirCansancio){
-        panza = Math.max(panza - reducirPanza, 0);
-        diversion = Math.max(diversion - reducirDiversion, 0);
-        caca = Math.max(caca - reducirCaca, 0);
-        cansancio = Math.max(cansancio - reducirCansancio, 0);
-    }
+    // Reducción asíncrona controlada por ciclos individuales
+    public void reducirPanza(int cantidad) { panza = Math.max(panza - cantidad, 0); }
+    public void reducirDiversion(int cantidad) { diversion = Math.max(diversion - cantidad, 0); }
+    public void reducirCaca(int cantidad) { caca = Math.max(caca - cantidad, 0); }
+    public void reducirCansancio(int cantidad) { cansancio = Math.max(cansancio - cantidad, 0); }
 }
