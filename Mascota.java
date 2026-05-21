@@ -1,4 +1,3 @@
-// Archivo: Mascota.java
 public class Mascota {
     // Atributos base
     private int felicidad = 50;
