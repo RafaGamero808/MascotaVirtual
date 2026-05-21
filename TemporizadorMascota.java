@@ -1,4 +1,3 @@
-// Archivo: TemporizadorMascota.java
 public class TemporizadorMascota implements Runnable {
     private Mascota mascota;
     private boolean ejecutando = true;
