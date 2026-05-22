@@ -1,0 +1,17 @@
+public class SistemaCombate {
+    private Mascota mascotaAliadа;
+    private Mascota mascotaEnemiga;
+    
+    public CombatSystem(Mascota aliada, Mascota enemiga) {
+        this.mascotaAliada = aliada;
+        this.mascotaEnemiga = enemiga;
+    }
+    
+    public void iniciarCombate() {
+        // Lógica de combate
+    }
+    
+    public boolean calcularGanador() {
+        // Determinación del ganador
+    }
+}
